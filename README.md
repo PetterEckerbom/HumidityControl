@@ -14,7 +14,7 @@ If anyone is interested I can can provide more detailed instructions on how I ma
 - DHT21 AM2301 TEMPERATURE & HUMIDITY SENSOR ([More info](https://hobbycomponents.com/sensors/840-dht21-am2301-temperature-humidity-sensor))
 - 5V relay (mine runs fine with just 3.3V)
 - 12V fan
-- UltraSonic Fogger (Theres olenty on ebay)
+- UltraSonic Fogger (Theres plenty on ebay)
 
 ------
 
