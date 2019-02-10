@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Humidity</title>
+  <style>
+  html{
+    background: blue;
+  }
+  body{
+    margin:0;
+    text-align: center;
+    padding-top: 30px;
+  }
+  #status {
+    display: inline;
+    padding:5px;
+    background: skyblue;
+    border-radius: 10px;
+    border: solid grey 8px;
+    border-style: groove;
+  }
+  .values{
+    background: skyblue;
+    display: block;
+    width: 90%;
+    padding: 20px;
+    margin: 40px auto;
+    border-radius: 10px;
+    border: solid grey 10px;
+    border-style: groove;
+    text-align: center;
+  }
+
+  .values h2{
+    padding: 20px;
+    display: inline;
+    font-family:monospace;
+  }
+
+  #runningx{
+    background:Red;
+  }
+  #is_running{
+    background:lime;
+  }
+  </style>
+  <script>
+    setTimeout(function(){
+      location.reload()
+    },5000)
+  </script>
+</head>
+<body>
+  <h1 id="status">Status:</h1>
+<div class="values" id="hum">
+  <h2>Humidity(%):</h2>
+  <h2>Humidityx</h2>
+</div>
+<div class="values" id="temp">
+  <h2>Tempratur(C):</h2>
+  <h2>TempX</h2>
+</div>
+<div class="values" id="Time">
+  <h2>Time:</h2>
+  <h2>TimeX</h2>
+</div>
+<div class="values" id="Target">
+  <h2>Humidity Target(%):</h2>
+  <h2>TargetX</h2>
+</div>
+<div class="values" id="runningx">
+  <h2>Not Running</h2>
+</div>
+
+<div class="values" id="Current_settings">
+  <h2>Current Settings:</h2><br>
+  <h2>Modex</h2><br>
+  <h2>Settingsx</h2>
+</div>
+<a href="Settings"><h1 id="status">Settings<h1></a>
+</body>
+</html>

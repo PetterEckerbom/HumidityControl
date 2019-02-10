@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Humidity</title>
+  <style>
+  html{
+    background: blue;
+  }
+  body{
+    margin:0;
+    text-align: center;
+    padding-top: 30px;
+  }
+  #status {
+    display: inline;
+    padding:5px;
+    background: skyblue;
+    border-radius: 10px;
+    border: solid grey 8px;
+    border-style: groove;
+  }
+  form{
+    background: skyblue;
+    width: 90%;
+    padding: 20px;
+    margin: 40px auto;
+    border-radius: 10px;
+    border: solid grey 10px;
+    border-style: groove;
+    text-align: center;
+  }
+
+  .divspam h2{
+    padding: 20px;
+    display: inline;
+    font-family:monospace;
+  }
+  input{
+    font-size: 20px;
+    font-family:monospace;
+  }
+  </style>
+</head>
+<body>
+  <h1 id="status">Settings</h1>
+<div class="divspam">
+    <form action="landing_static" method="post">
+      <h1>Static mode</h1>
+      <h2>Turn ON:</h2><input type="radio" name="check" value="ON" checked></input><br>
+      <h2>Turn OFF:</h2><input type="radio" name="check" value="OFF"></input><br>
+      <input type="text" name="password" placeholder="Admin Password"><br>
+      <input type="Submit" value="Change"></input>
+    </form>
+  </div>
+<div class="divspam">
+  <form action="landing_target" method="post">
+    <h1>Target Mode:</h1>
+    <h2>Humidity Target(%):</h2><input type="number" name="target" min="0" max="100" value="85"><br>
+    <input type="text" name="password" placeholder="Admin Password"><br>
+    <input type="Submit" value="Change">
+  </form>
+</div>
+
+<div class="divspam">
+  <form action="landing_cycle" method="post">
+    <h1>24h cycle:</h1>
+    <h2>Humidity Target standard(%):</h2><input type="number" name="Target_stand" min="0" max="100" value="82"><br>
+    <h2>Humidity Target morning/evening(%):</h2><input type="number" name="target_exc" min="0" max="100" value="92"><br>
+    <h2>Morning Start(h):</h2><input type="number" name="m_start" min="0" max="23" value="6"><br>
+    <h2>Evening Start(h):</h2><input type="number" name="e_start" min="0" max="23" value="18"><br>
+    <h2>Morning/Evening range(h):</h2><input type="number" name="range" min="0" max="23" value="2"><br>
+    <input type="text" name="password" placeholder="Admin Password"><br>
+    <input type="Submit" value="Change">
+  </form>
+</div>
+<a href="./"><h1 id="status">Home<h1></a>
+</body>
+</html>
