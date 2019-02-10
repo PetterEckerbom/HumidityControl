@@ -62,7 +62,7 @@ void handleRoot() {
     humidity_S.replace("runningx", "is_running");
     humidity_S.replace("Not Running", "Running");
   }
-  //Below we write out the settings for the 3 diffrent modes.
+  //Below we write out the settings for the active mode.
   if(mist_mode[0]){
     humidity_S.replace("Modex", "Static-Mode");
     if(running_mist){
@@ -99,8 +99,10 @@ void handleNotFound() {
 }
 
 void setup(void) {
+  //Set D4 to output (This pin controls the relay)
   pinMode(D4, OUTPUT);
   Serial.begin(115200);
+  //Inintate wifi connection
   WiFi.mode(WIFI_STA);
   WiFi.hostname("test");
   WiFi.begin(ssid, password);
@@ -111,6 +113,7 @@ void setup(void) {
     delay(500);
     Serial.print(".");
   }
+  //When connected print IP address to serial
   Serial.println("");
   Serial.print("Connected to ");
   Serial.println(ssid);
@@ -120,136 +123,150 @@ void setup(void) {
   if (MDNS.begin("esp8266")) {
     Serial.println("MDNS responder started");
   }
-
+  //add listener for calls to "/", sends calls to function handleRoot
   server.on("/", handleRoot);
-
+  //when calls are sent to "/settings" we simply respond with the static settings page
   server.on("/Settings", []() {
     server.send(200, "text/html",  settingshtml);
   });
 
+//Below are the calls to change settings to static
   server.on("/landing_static", []() {
-
+  //We check if password provided is correct, if not we send a 302 redirect response to the Settings page
     if(server.arg(1) != pswd){
       server.sendHeader("Location", String("/Settings"), true);
       server.send ( 302, "text/plain", "");
       return;
     }
-
+//We make sure the first element of the mode array is true
     mist_mode[0] = true;
     mist_mode[1] = false;
     mist_mode[2] = false;
-
+//depending on the request we either turn on mister or off
     if(server.arg(0) == "ON"){
       running_mist = true;
     }else{
       running_mist = false;
     }
-
+//Send a 302 redirect back to index
     server.sendHeader("Location", String("/"), true);
     server.send ( 302, "text/plain", "");
   });
 
+//Below is listener to change to target mode and its settings
   server.on("/landing_target", []() {
-
+//Checks password
     if(server.arg(1) != pswd){
       server.sendHeader("Location", String("/Settings"), true);
       server.send ( 302, "text/plain", "");
       return;
     }
-
+//change the mode to make sure its correct
     mist_mode[0] = false;
     mist_mode[1] = true;
     mist_mode[2] = false;
 
+//Takes the target and converts to float in order to be able to do mathematics with it
     Target = server.arg(0).toFloat();
 
+//redirects back to Index with a 302
     server.sendHeader("Location", String("/"), true);
     server.send ( 302, "text/plain", "");
   });
-
+//listen for request to change to 24h cycle mode
   server.on("/landing_cycle", []() {
-
+//check password
     if(server.arg(5) != pswd){
       server.sendHeader("Location", String("/Settings"), true);
       server.send ( 302, "text/plain", "");
       return;
     }
-
+//enables correct mode
     mist_mode[0] = false;
     mist_mode[1] = false;
     mist_mode[2] = true;
 
+//Saves all the values in thir correct slot and arry
     mode2mist[0] = server.arg(0).toFloat();
     mode2mist[1] = server.arg(1).toFloat();
 
     mode2values[0] = server.arg(2).toInt();
     mode2values[1] = server.arg(3).toInt();
     mode2values[2] = server.arg(4).toInt();
-
+//send back to index with a 302
     server.sendHeader("Location", String("/"), true);
     server.send ( 302, "text/plain", "");
   });
-
+//Listener for all outer request, forward response to fucktion handleNotFound
   server.onNotFound(handleNotFound);
-
+//Starts the server
   server.begin();
   Serial.println("HTTP server started");
-
+//Starts the humidity and temperature sensor
   dht.begin();
 }
 
+//varible to make sure updates are not too frequent
 unsigned long lastcheck = 0;
 
 void loop(void) {
   server.handleClient();
-
+ //If it has been 10 seconds since last check it does anotherone
   unsigned long timecheck = millis();
     if(timecheck - lastcheck >= 10000){
       lastcheck = timecheck;
+      //reads temp and humidity
       hum = dht.readHumidity();
       temp = dht.readTemperature();
 
+      //calls the public time API available at worldclockapi.com
       http.begin("http://worldclockapi.com/api/jsonp/cet/now?callback=mycallback");
       int httpCode = http.GET();
       String payload = http.getString();
+      //Extracts the part of the response of the call that is the TIME (TODO: convert into json and extract that way, more rubus)
       int start = payload.indexOf("currentDateTime")+29;
       Time = payload.substring(start, start+5);
       http.end();
     }
-
+    //If the mister should be running we set D4 to high, this closes the relay
     if(running_mist){
       digitalWrite(D4, HIGH);
      }else{
       digitalWrite(D4, LOW);
      }
-
+    //Below we check if the mister has met its target (not if mode is static since it doesnt go off target then)
     if(!mist_mode[0]){
       if(running_mist){
-        if(hum - offset>=Target || hum >= 98){
+        //turns off the mister if its above the target offset (offset is set to 5 by default, this so it will go a bit over the target)
+        if(hum >=Target +offset || hum >= 98){
           running_mist = false;
         }
       }else{
-        if(hum<=Target){
+        //turn on mister if its below target
+        if(hum<Target){
           running_mist = true;
         }
       }
     }
 
-
+    //If its 24h cycle mode we check what target should be active with this function
     if(mist_mode[2]){
       get_target();
     }
 }
 
 void get_target(){
+  //Only check the hour (ignoring what minute it is)
   String currentt = Time.substring(0, 2);
   int timecomp = currentt.toInt();
+  //If time is within either of the starting times and its range we return set target to the second setting (usually higher humidity)
   for(int i = 0; i < 2; i++){
        if(mode2values[i] + mode2values[2] >= timecomp && mode2values[i] <= timecomp){
           Target = mode2mist[1];
           return;
         }
   }
+  //If not we set Target to the standard humidity
   Target = mode2mist[0];
   return;
 }
