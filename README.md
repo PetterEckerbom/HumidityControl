@@ -2,6 +2,8 @@
 
 This is the codebase for a humidity monitor and controller designed for smaller spaces such as terrariums, this is particularly useful if you keep species of animals that require a certain amount of humidity to survive or prosper, in my case it is used to make sure my dart frogs always have a humidity thats 80%+ (This can be changed with a web interface through your phone).
 
+[Here is a video showing of the project](https://www.youtube.com/watch?v=Oq-Q8FDIVVs)
+
 ------
 
 ## Electronics
