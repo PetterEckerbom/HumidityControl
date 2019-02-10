@@ -18,7 +18,7 @@ If anyone is interested I can can provide more detailed instructions on how I ma
 
 ### User Interface
 
-Since the NodeMCU has a built in WIFI chip you can easily track the status and change the settings of the device from your webbrowser simply by entering the local IP adress of the device, If you'd like to access it on another network you can make a portforward your router to get status of your terrarium when out and about. Here is what the interface looks like, it works fine on both mobile and desktop:
+Since the NodeMCU has a built in WIFI chip you can easily track the status and change the settings of the device from your webbrowser simply by entering the local IP adress of the device. If you'd like to access it on another network you can portforward your router to get the status of your terrarium when out and about. Here is what the interface looks like, it works fine on both mobile and desktop:
 
 
 
@@ -36,7 +36,7 @@ Since the NodeMCU has a built in WIFI chip you can easily track the status and c
 
 - <u>**Static mode**</u> that is either set to ON/OFF to manually control the fog in the terrarium
 - **<u>Target mode</u>**, when enabled the device will try to make it so the terrarium always is around a certain humidity target
-- **<u>24h Cycle</u>**, Similar to Target but allows you to have different targets for for evening and morning then the rest of the day to allow for a more natural simulation of how humidity is in nature. by default the standard target is 82% while being 92% from 6-8 and 18-20.
+- **<u>24h Cycle</u>**, Similar to Target but allows you to have different targets for for evening and morning then the rest of the day to allow for a more natural simulation of how humidity is in nature. By default the standard target is 82% while being 92% from 6-8 and 18-20.
 
 To change mode and settings you need Admin password which is standard as just "x" and can be changed in the main.ino file
 
@@ -44,4 +44,4 @@ To change mode and settings you need Admin password which is standard as just "x
 
 #### TODO:
 
-Email warning system once humidity falls below a certain level. Since the device is mostly used as a monitor system when I am home I usully manually add humidity, only turning the self fogger on when not home for an extended period of time. When I am home it would be nice if it would email me reminders when my frogs needed new water, it could also email me warning once it got too warm or cold in the terrarium since it also tracks that.
+Email warning system once humidity falls below a certain level. Since the device is mostly used as a monitor system when I am home I usually manually add humidity, only turning the auto-fogger on when not home for an extended period of time. When I am home it would be nice if it would email me reminders when my frogs needed new water. This could also be used to notify me if the fogger ran out of water
